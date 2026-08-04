@@ -77,9 +77,9 @@ const SCENE_LAYOUT = {
   // },
   fighterJet: {
     // Background flyby. Existing model positions above remain unchanged.
-    position: { x: -1.28, y: 1.0, z: -0.27 },
+    position: { x: -1.28, y: 0.80, z: -0.27 },
     rotation: { x: 0, y: 0, z: -4 },
-    scale: 0.80,
+    scale: 0.60,
     flight: {
       startX: -1.28,
       endX: 1.28,
