@@ -1,0 +1,1 @@
+Compile assets/card.png in the MindAR Image Target Compiler. Rename the downloaded file to card.mind and place it in this folder.

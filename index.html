@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#03111b" />
+  <meta name="description" content="UPICON Independence Day WebAR experience" />
+  <title>UPICON Independence Day WebAR</title>
+  <link rel="stylesheet" href="./style.css?v=9.1-launch-fix" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+      "mindar-image-three": "https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <main id="app">
+    <section id="landing" class="landing">
+      <header class="nav shell">
+        <img src="./assets/upicon-logo.png" alt="UPICON" class="brand-logo" />
+        <div class="nav-actions">
+          <button id="view-card-btn" class="ghost-button" type="button">View greeting card</button>
+          <button id="nav-launch-btn" class="small-primary" type="button">Launch AR</button>
+        </div>
+      </header>
+
+      <div class="ambient ambient-one"></div>
+      <div class="ambient ambient-two"></div>
+      <div class="particle-field" aria-hidden="true"></div>
+
+      <section class="hero shell">
+        <div class="hero-copy">
+          <p class="kicker">SCAN · CELEBRATE · EXPERIENCE</p>
+          <h1>Experience <span>Independence Day</span> in WebAR</h1>
+          <p class="hero-text">Scan the UPICON greeting card to unlock a cinematic 3D celebration, a leadership message, animated national symbols and interactive visuals—directly in your browser.</p>
+
+          <div class="feature-row">
+            <article><strong>Immersive 3D</strong><span>Real GLB models and animated flag</span></article>
+            <article><strong>Leadership Message</strong><span>Video inside a floating glass screen</span></article>
+            <article><strong>No App Required</strong><span>Works through a secure mobile browser</span></article>
+          </div>
+
+          <div class="hero-actions">
+            <button id="launch-btn" class="primary-button" type="button"><span>▣</span> Launch AR Experience</button>
+            <button id="demo-btn" class="secondary-button" type="button"><span>▶</span> Preview Demo</button>
+          </div>
+
+          <div class="trust-row">
+            <span>✓ Mobile friendly</span><span>✓ Fast and lightweight</span><span>✓ Privacy first</span>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="Preview of the UPICON AR experience">
+          <div class="device-shell">
+            <div class="device-topline"><span>AR EXPERIENCE PREVIEW</span><span class="ready-dot">● READY</span></div>
+            <img src="./assets/design-preview.png" alt="Cinematic UPICON Independence Day WebAR preview" />
+            <div class="scan-pill">⌗ Point your camera at the greeting card</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="how shell">
+        <p class="section-label">HOW IT WORKS</p>
+        <div class="steps">
+          <article><b>1</b><strong>Scan QR</strong><span>Open the experience instantly</span></article>
+          <i>→</i>
+          <article><b>2</b><strong>Allow Camera</strong><span>Grant secure browser access</span></article>
+          <i>→</i>
+          <article><b>3</b><strong>Point at Card</strong><span>Show the printed target image</span></article>
+          <i>→</i>
+          <article><b>4</b><strong>Experience AR</strong><span>Watch the 3D scene come alive</span></article>
+        </div>
+      </section>
+
+      <section class="card-qr shell">
+        <div class="card-preview"><p class="section-label">GREETING CARD FRONT</p><img src="./assets/card.png" alt="UPICON Independence Day greeting card" /></div>
+        <div class="qr-preview"><p class="section-label">SCAN TO EXPERIENCE</p><img src="./assets/qr-code.png" alt="QR code for the UPICON AR experience" /><span>Print this QR on the back of the card</span></div>
+      </section>
+    </section>
+
+    <section id="permission-panel" class="modal hidden" aria-modal="true" role="dialog">
+      <div class="modal-card permission-card">
+        <button class="modal-close" type="button" aria-label="Close">×</button>
+        <img src="./assets/upicon-logo.png" alt="UPICON" />
+        <div class="camera-orbit"><span>⌗</span></div>
+        <h2>Ready to enter WebAR?</h2>
+        <p>Allow camera access, then point your phone at the front of the UPICON greeting card.</p>
+        <button id="start-camera-btn" class="primary-button" type="button">Continue to Camera</button>
+        <button id="open-card-btn" class="ghost-button full" type="button">Open target card</button>
+      </div>
+    </section>
+
+    <section id="demo-modal" class="modal hidden" aria-modal="true" role="dialog">
+      <div class="modal-card demo-card">
+        <button class="demo-close" type="button" aria-label="Close">×</button>
+        <video controls playsinline poster="./assets/design-preview.png" src="./assets/md-demo.mp4"></video>
+      </div>
+    </section>
+
+    <section id="ar-view" class="ar-view hidden">
+      <div id="ar-container"></div>
+
+      <!-- Transparent gesture surface above the WebGL canvas. -->
+      <div id="gesture-layer" class="gesture-layer" aria-label="Drag to rotate, pinch to resize, double tap to reset"></div>
+
+      <div id="gesture-hint" class="gesture-hint hidden" role="status">
+        <div><span>↔</span><strong>Drag</strong><small>Rotate</small></div>
+        <div><span>🤏</span><strong>Pinch</strong><small>Resize</small></div>
+        <div><span>◎</span><strong>Double tap</strong><small>Reset</small></div>
+      </div>
+
+      <header class="ar-header">
+        <img src="./assets/upicon-logo.png" alt="UPICON" />
+        <span id="tracking-status">Preparing cinematic experience…</span>
+        <button id="close-ar-btn" type="button" aria-label="Close AR">×</button>
+      </header>
+      <div class="ar-guide"><span></span><p>Keep the full greeting card visible and move slowly</p></div>
+      <div class="ar-controls">
+        <button id="play-video-btn" class="control-primary hidden" type="button">▶ Play leadership message</button>
+        <button id="sound-toggle" class="control-round hidden" type="button" aria-label="Toggle sound">🔇</button>
+        <button id="replay-btn" class="control-round hidden" type="button" aria-label="Replay video">↻</button>
+        <button id="reset-view-btn" class="control-round hidden" type="button" aria-label="Reset AR rotation and size">⌂</button>
+      </div>
+    </section>
+
+    <video id="md-video" src="./assets/md-demo.mp4" playsinline webkit-playsinline loop muted preload="auto" crossorigin="anonymous"></video>
+  </main>
+
+  <script>
+  // Critical landing-page fallback.
+  // This runs without ES modules, Three.js, or MindAR, so the Launch AR
+  // buttons still work even if a CDN/module fails or an older file is cached.
+  (() => {
+    const bindLaunchFallback = () => {
+      const permissionPanel = document.querySelector("#permission-panel");
+      const launchButtons = [
+        document.querySelector("#launch-btn"),
+        document.querySelector("#nav-launch-btn")
+      ].filter(Boolean);
+
+      launchButtons.forEach((button) => {
+        if (button.dataset.launchFallbackBound === "true") return;
+        button.dataset.launchFallbackBound = "true";
+        button.addEventListener("click", () => {
+          permissionPanel?.classList.remove("hidden");
+        });
+      });
+
+      document.querySelector(".modal-close")?.addEventListener("click", () => {
+        permissionPanel?.classList.add("hidden");
+      });
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bindLaunchFallback, { once: true });
+    } else {
+      bindLaunchFallback();
+    }
+  })();
+</script>
+<script type="module" src="./js/app.js?v=9.1-launch-fix"></script>
+</body>
+</html>
